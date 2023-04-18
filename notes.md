@@ -31,6 +31,16 @@ react
                         - Logic to initiate call
                         - Logic to process the data if the call is successful
                         - Logic that will handle errors if any  
+                - useReducer(reducer, initialState)
+                    - reducer(state, action)
+                        - state: the Current State that will be udated based on action
+                        - action: the action that is dispatched
+                            - REact.Dispatch(SetStateAction)
+                                - SetStateAction
+                                    - reason for updating the state
+                    - initialState
+                        - the default state of the component
+                        - the component will be notified when this is cahnged                        
             - useEffect()
                 - Used for React Component Mounting and UnMounting Process
                     - Heavy Load operations
@@ -77,12 +87,108 @@ react-dom
         - Define Property System for Passing data from parent to Child
         - Define Functions those will be raised at child level so that data can be emitted to parent over the data binding
         - To Notify the state updates across components make sure that the child knows which property will be updated on change from parent  to child level 
-    - Create a custom hook if the similar functionaly needs to be executed as component level that updates the '
-    'State'     
+    - Create a custom hook if the similar functionaly needs to be executed at component level that updates the '
+    'State'   
+        - Why?
+            - We cannot access or execute a hook inside a custom function executing inside component   
+            - One hook cannot access another hook
+        - E.g.
+            - Create a Custom Hook that will be responsible to manage external async calls and update the state for the component based on custom logic    
+
     
 
 # Usew of WebPack
 https://www.webnethelper.com/2021/10/reactjs17x-creating-application-with.html
  
-   
 
+# Redux
+    - Action, what has happened
+        - a function with optional input parameters
+        - returns Object literal as follows
+```` javascript
+        {
+            type:'ACTION_TYPE',
+            payload
+        }
+````
+    - Reducer, how it has happedn and whats the data received
+        - a Pure function
+        - returns an updated state
+```` javascript
+        const reducer = (state, action)=>{}
+````
+    - Store, a single stoure of truth that contains global data 
+        - COntains Schema
+
+# Implementation Redux
+    - redux
+        - base object model
+        - createStore() function (deprecated)
+            - applyMiddleware()
+    - react-redux
+        - bridge between react and redux
+        - Hooks
+            - useDispatch()
+                - Dispatch actions from UI
+            - useSelector()
+                - Subscribe to store
+                - The UI will be notified data from store over the subscription
+            - connet(), deprecated
+                - Connect Compoennt with Store    
+                - mapStateToProps()
+                    - replaced using useSelector()
+                - mapDispathToProps()
+                    - repleced usign useDispatch()  
+            - Provider
+                - An ExoticComponent that loads the 'store' as application levele and make sure that its is available for all react components           
+    - @reduxjs/toolkit
+        - Simple, optimized, powerfull, and effective
+        - configureStore({
+            reducer:[ALL-REDUCERS],
+            middleware:[MIDDLEWARES]
+        })
+        - createAction(type)
+            - USed to Define an Action
+            - return the object literal
+                - { payload:}   
+        - createReducer(intialState, (builder)=>{})
+            - builder
+                - an object that is used to define cases to monitor actions those are dispatched
+                - builder.addCase(createAction-type, (state, action)=>{})
+                    - state: the state to be mutated based on 'payload' returned from 'action' 
+    - redux-saga, package
+        - saga, package
+        - redux-saga/effects
+            - Set opf operators to listen to actions, manage async calls, and dispatch output actions
+            - take() and takeLatest()
+                - Listent to the action that is dispatch
+                - also has capacility to read the 'payload' returned by the action
+            - call()
+                - call the function that performs async calls e.g. AJAX calls
+            - put()
+                - dispatch output action based on async call execution
+            - all()
+                - Monitor all actions listened by and dispatched from SAGA  
+            - createSagaMiddleware()
+                - create a SAGA middleware instance so that it can be configured while creating the store using 'configureStore()'
+                    - run()
+                        - Keep running the Saga Middleware at root level
+       - Generaor functions
+```` javascript
+    function* functionName(){
+        yield RESULT
+    }
+`````
+        - Rules for reating SAGA Middleware
+            - For Each Input Action generator function  there exist and Output Action generator function
+            - CReate a root generator function that will keep executing all  Input Action generator functions at application root level where the store is created
+    - Redux USe-Case
+        - If one of the child component needs data from the store at first load of the component as well as for any changes in store, then use following practices aka rules
+            - define a dynamic function in props using 'Function'
+            - execute this function in 'useEffct()' so that its will get the data from store and use in rendering and then it will stop
+
+            - to prevent unnecessary child component component update
+                - use 'useCallback()' hook that will initially dispatch the action to get data from server and make it available to child 
+
+
+                                              

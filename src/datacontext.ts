@@ -1,5 +1,7 @@
 import { createContext } from "react";
 import { ProductInfo } from "./models/productinfo";
+
+export const DataContext = createContext({});
 // The Object with empty data
 // define the createContext with the
 // typed schema so that components will be able to set its behavior accordingly
