@@ -6,6 +6,7 @@ export class ProductInfo {
         public CategoryName: string,
         public Manufacturer:string,
         public Description:string,
-        public BasePrice:number
+        public BasePrice:number,
+        public isDeletable:boolean
     ){}
 }

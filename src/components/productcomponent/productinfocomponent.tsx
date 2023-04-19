@@ -14,10 +14,12 @@ const ProductInfoComponent = () => {
     CategoryName:'',
     Manufacturer:'',
     Description:'',
-    BasePrice:0
+    BasePrice:0,
+    isDeletable: true
 
   });  
   const [products, setProducts] = useState<ProductInfo[]>([]);
+  const [sorting, setSorting] = useState({active: false ,column: '', order:''});
   const [collection, setDataCollection] = useState<any[]>([]);
 
   const categories = ['Electronics', 'Electrical', 'Food', 'Fashion'];
@@ -30,7 +32,8 @@ const ProductInfoComponent = () => {
         CategoryName:'',
         Manufacturer:'',
         Description:'',
-        BasePrice:0
+        BasePrice:0,
+        isDeletable: true
       });
   }
   const save=()=>{
@@ -39,6 +42,70 @@ const ProductInfoComponent = () => {
     // console.log(JSON.stringify(collection));
 
   }
+
+  const deleteProduct = (product:ProductInfo) =>{
+    let filteredList = products.filter((i)=>i.ProductId !== product.ProductId);
+    setProducts(filteredList);
+  }
+
+  const sortProducts = (column:string, order:string) =>{
+    //utility function to handle sorting logic
+    let sortedArr;
+
+    sortedArr = [...products].sort((a:any, b:any) => {
+      let fa = a[column].toLowerCase(),
+      fb = b[column].toLowerCase();
+
+      if(order === 'ASC') {
+        if (fa < fb) return -1;
+        if (fa > fb) return 1;
+      } else if(order === 'DESC'){
+        if (fa < fb) return 1;
+        if (fa > fb) return -1;
+      }
+      return 0;
+    });
+
+    return sortedArr;
+
+  }
+
+  const sortBy = (header: string) => {
+  //HANDLES ASCENDING/DESCENDING SORTING AND TOGGLES SORTING ON/OFF ON ANY COLUMN
+  //NPM START TO SEE THE BEAUTY
+
+    let sortedProducts;
+    if (!sorting.active) {
+      //sort by ascending order
+      sortedProducts = sortProducts(header, "ASC");
+      setProducts(sortedProducts);
+      setSorting({ active: true, column: header, order: "ASC" });
+    } else if (sorting.active) {
+      if (sorting.column === header) {
+        // sorting already applied to the column clicked
+        if (sorting.order === "ASC") {
+          //toggle sort by to descending order
+          sortedProducts = sortProducts(header, "DESC");
+          setProducts(sortedProducts);
+          //update sorting state
+          setSorting({ active: true, column: header, order: "DESC" });
+        } else {
+          //remove sorting (back to default/ProductId)
+          sortedProducts = sortProducts("ProductId", "ASC");
+          setProducts(sortedProducts);
+          //update sorting state
+          setSorting({ active: false, column: "", order: "" });
+        }
+      } else {
+        //sort by ascending order on new column
+        sortedProducts = sortProducts(header, "ASC");
+        setProducts(sortedProducts);
+        //update sorting state
+        setSorting({ active: true, column: header, order: "ASC" });
+      }
+    }
+  };
+
   return (
     <div className='container'>
        <div className='form-group'>
@@ -116,11 +183,25 @@ const ProductInfoComponent = () => {
              onClick={save}
            >Save</button>
        </div>
+       <div className="form-group">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={product.isDeletable}
+            onChange={(evt) =>
+              setProduct({ ...product, isDeletable: evt.target.checked })
+            }
+            id="isDeletable"
+          />
+          <label className="form-check-label" htmlFor="isDeletable">
+            Is Deletable?
+          </label>
+      </div>
        <hr/>
        {/* {
         JSON.stringify(products)
        } */}
-       <DataContextEvent.Provider value={{products,setProduct}}>
+       <DataContextEvent.Provider value={{products,setProduct,deleteProduct,sortBy,sorting}}>
           <DataGridContextComponent></DataGridContextComponent>
        </DataContextEvent.Provider>
     </div>

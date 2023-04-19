@@ -10,6 +10,9 @@ const DataGridContextComponent = () => {
  
  dataSource = consumer[Object.keys(consumer)[0]]; // Array 
  let evt = consumer[Object.keys(consumer)[1]]; // callback
+ let deleteProduct = consumer[Object.keys(consumer)[2]]; // delete method
+ let sortBy = consumer[Object.keys(consumer)[3]]; // sort method
+ let sorting = consumer[Object.keys(consumer)[4]]; // sort details
 
 
  console.log(`In the Component ${JSON.stringify(consumer)}`);
@@ -48,7 +51,9 @@ if(Array.isArray(dataSource)){
                   <tr>
                     {
                         columns.map((header,idx)=>(
-                            <th key={idx}>{header}</th>
+                            <th key={idx} onClick={()=> sortBy(header)}>
+                              {header===sorting.column ? `${header} (${sorting.order})` : header}
+                              </th>
                         ))
                     }
                   </tr>
@@ -58,10 +63,15 @@ if(Array.isArray(dataSource)){
                  dataSource.map((record:object,index:number)=>(
                     <tr key={index} onClick={()=>evt(record)}>
                         {
-                           columns.map((header,idx)=>(
-
-                            <td key={idx}>{record[header as keyof typeof record]}</td>
-                        ))
+                           columns.map((header,idx)=>
+                           header === 'isDeletable' && record[header as keyof typeof record] 
+                           ? <td key={idx}>
+                              <button type="button" className="btn btn-danger" 
+                              onClick={()=>deleteProduct(record)}
+                              >Delete</button>
+                            </td>
+                            : <td key={idx}>{record[header as keyof typeof record]}</td>
+                           )
                         }
                     </tr>
                  ))
