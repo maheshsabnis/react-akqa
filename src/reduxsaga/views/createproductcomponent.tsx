@@ -8,7 +8,7 @@ const CreateProductComponent = () => {
 
     const product:ProductInfo = new ProductInfo(
         0,
-        'Prod-2003',
+        'Prod-2004',
         'Biscuts',
         'Food',
         'Parle',

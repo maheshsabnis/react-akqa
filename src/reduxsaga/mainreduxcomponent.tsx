@@ -18,6 +18,12 @@ const MainReduxComponent = () => {
     (state:IAppState)=>state.products,
     shallowEqual
  );
+
+
+ const cart:any[] = useSelector(
+    (state:IAppState)=>state.products
+ );
+
 // 2. dispatch action
 const dispatch:Dispatch<any> = useDispatch();
 

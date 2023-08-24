@@ -190,5 +190,48 @@ https://www.webnethelper.com/2021/10/reactjs17x-creating-application-with.html
             - to prevent unnecessary child component component update
                 - use 'useCallback()' hook that will initially dispatch the action to get data from server and make it available to child 
 
+# React 16.x+ to  18.x
+- Managing the Lazy Loading
+    - SSR STreaming with 
+        - lazy Loading
+            - The <Suspense> component
+```` javascript
+        const SomeComponent = React.lazy(()=> import('COMPONENT-FILE-PATH'))
+            - COMPONENT-FILE-PATH
+                - May be available in WebPack Build
+                    - npm run build
+                - May be received from external Web Server    
+
+        return (
+            <Suspense fallback={YOUR UI}>
+                <SomeComponent/>
+            </Suspese>
+        )        
+````
+        - Code-Splitting
+- Streaming aka Server-Side-Rendering (SSR)
+    - HTML and Static Data Generation MUST be handled on Server
+    - Pre-React 18
+        - SSR with Node.js + Express
+            - Node.js 'fs' and its readFile() async method
+```` javascript
+     app = express();
+     app.get('/', (req,resp_=>{
+            // extract HTML String + Data from App Component
+            var app = ReactDOMServer.renderToString(<App/>);
+            // Read index file
+            var index = path.resolve('./build/index.html')
+
+            // read file and  resopod it
+
+            fs.readFile(index, 'utf-8', (err,data)=>{
+                res.send(data contactinate it with 'app')
+            })
+
+     })   
+````
+    - ReactDOM.hydrate(<App/>)
+- Optimization                 
+
 
                                               

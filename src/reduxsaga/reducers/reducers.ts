@@ -1,7 +1,7 @@
 // import State Schema
 import { IAppState } from "../state/state";
 // createReducer from ToolKit
-import { createReducer } from "@reduxjs/toolkit";
+import { combineReducers, createReducer } from "@reduxjs/toolkit";
 // the ProductInfo class
 import { ProductInfo } from "../../models/productinfo";
 // actions those are monitored
@@ -25,4 +25,45 @@ export const reducer = createReducer(initialState, (builder)=>{
         state.products = [...state.products, action.payload.product];
     });
 });
+
+/* Multiple Reducer FUnctions */
+
+const reducerCart=(state:IAppState,action:any)=>{
+    /* Logic */
+    return {
+        ...state
+    }
+}
+
+const reducerUser=(state:IAppState,action:any)=>{
+    switch(action.type){
+        case 'GET_USERS':
+                
+    }
+    /* Logic */
+    return {
+        ...state
+    }
+}
+
+/* Combine Reducer */
+
+const allReducers = combineReducers({
+    cart:reducerCart,
+    user:reducerUser
+});
+
+export default allReducers;
+
+
+
+
+
+
+
+
+
+
+
+
 
